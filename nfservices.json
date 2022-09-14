@@ -1,0 +1,34 @@
+{
+    "nfServices": {
+      "24c7b397-0431-48ce-b281-f8c377183ba1": 
+        {
+          "serviceName": "nudr-dr",
+          "nfServiceStatus": "REGISTERED",
+          "serviceInstanceId": "24c7b397-0431-48ce-b281-f8c377183ba1",
+          "scheme": "https",
+          "ipEndPoints": [
+            {
+              "ipv4Address": "127.0.0.1",
+              "port": "443",
+              "transport": "TCP"
+            }
+          ]
+        },
+    "24c7b397-0431-48ce-b281-f8c377183ba2":
+        {
+          "serviceName": "nudsf-dr",
+          "nfServiceStatus": "REGISTERED",
+          "serviceInstanceId": "24c7b397-0431-48ce-b281-f8c377183ba2",
+          "scheme": "https",
+          "ipEndPoints": [
+            {
+              "ipv4Address": "127.0.0.1",
+              "port": "443",
+              "transport": "TCP"
+            }
+          ]
+        }
+      
+    }
+  }
+  

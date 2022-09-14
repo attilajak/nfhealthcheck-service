@@ -1,0 +1,49 @@
+{
+    "serviceRegConfigs": {
+      "serviceRegConfig": [
+        {
+          "nfId": "24c7b397-0431-48ce-b281-f8c377183ba1",
+          "loadQuery" : "avg(nf_load_metric1)",
+          "servicePodList": [
+            {
+              "podLabelList": [
+                {
+                  "podLabel": "microservice",
+                  "podLabelValue": "nudr-access"
+                }
+              ],
+              "highWatermark": 1,
+              "lowWatermark": 1
+            },
+            {
+              "podLabelList": [
+                {
+                  "podLabel": "microservice",
+                  "podLabelValue": "nudsf-access"
+                }
+              ],
+              "highWatermark": 1,
+              "lowWatermark": 1
+            }
+          ]
+        },
+        {
+          "nfId": "24c7b397-0431-48ce-b281-f8c377183ba2",
+          "loadQuery" : "avg(nf_load_metric2)",
+          "servicePodList": [
+            {
+              "podLabelList": [
+                {
+                  "podLabel": "microservice",
+                  "podLabelValue": "nudr-access"
+                }
+              ],
+              "highWatermark": 2,
+              "lowWatermark": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+  

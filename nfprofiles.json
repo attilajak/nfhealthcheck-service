@@ -1,0 +1,178 @@
+{
+
+       "2278cfad-db93-4d22-a654-09cc5b6218c8":
+          {
+             "allowedNfDomains": [
+                "nrf.nokia.com",
+                "nrf2.nokia.com"
+             ],
+             "allowedNfTypes": [
+                "PCF",
+                "UDM",
+                "NEF"
+             ],
+             "allowedPlmns": [
+                {
+                   "mcc": "400",
+                   "mnc": "99"
+                },
+                {
+                   "mcc": "401",
+                   "mnc": "100"
+                },
+                {
+                   "mcc": "402",
+                   "mnc": "101"
+                }
+             ],
+             "allowedSnpns": [
+                {
+                   "mcc": "402",
+                   "mnc": "87",
+                   "nid": "A012A012FC2"
+                }
+             ],
+             "capacity": 100,
+             "fqdn": "nudr1.nokia.com",
+             "heartBeatTimer": 60,
+             "ipv4Addresses": [
+                "127.0.0.1",
+                "192.168.1.1"
+             ],
+             "lcHSupportInd": "false",
+             "locality": "westcoast",
+             "nfInstanceId": "2278cfad-db93-4d22-a654-09cc5b6218c8",
+             "nfServices": [
+                      {
+          "serviceName": "nudr-dr",
+          "nfServiceStatus": "REGISTERED",
+          "serviceInstanceId": "24c7b397-0431-48ce-b281-f8c377183ba1",
+          "versions": [
+                {
+                    "apiVersionInUri": "v2",
+                    "apiFullVersion": "2.0.3"
+                }
+           ],
+          "scheme": "https",
+          "ipEndPoints": [
+            {
+              "ipv4Address": "127.0.0.1",
+              "port": 443,
+              "transport": "TCP"
+            }
+          ]
+        } 
+             ],
+             "nfSetIdList": [
+                "nfset3",
+                "nfset4"
+             ],
+             "nfStatus": "REGISTERED",
+             "nfType": "UDR",
+             "udrInfo": {
+        "groupId": "UDR-SDL",
+        "supportedDataSets": [
+            "SUBSCRIPTION"
+        ]
+    },
+             "plmnList": [
+                {
+                   "mcc": "100",
+                   "mnc": "99"
+                },
+                {
+                   "mcc": "101",
+                   "mnc": "105"
+                }
+             ],
+             "priority": 60
+          },
+
+          "2278cfad-db93-4d22-a654-09cc5b6218c9" :
+          {
+             "allowedNfDomains": [
+                "nrf.nokia.com",
+                "nrf2.nokia.com"
+             ],
+             "allowedNfTypes": [
+                "AMF",
+                "NEF",
+                "PCF"
+             ],
+             "allowedPlmns": [
+                {
+                   "mcc": "400",
+                   "mnc": "99"
+                },
+                {
+                   "mcc": "401",
+                   "mnc": "100"
+                },
+                {
+                   "mcc": "402",
+                   "mnc": "101"
+                }
+             ],
+             "allowedSnpns": [
+                {
+                   "mcc": "402",
+                   "mnc": "87",
+                   "nid": "A012A012FC2"
+                }
+             ],
+             "capacity": 100,
+             "fqdn": "nudsf1.nokia.com",
+             "heartBeatTimer": 60,
+             "ipv4Addresses": [
+                "127.0.0.1",
+                "192.168.1.1"
+             ],
+             "locality": "westcoast",
+             "nfInstanceId": "2278cfad-db93-4d22-a654-09cc5b6218c9",
+             "nfServices": [
+                {
+          "serviceName": "nudsf-dr",
+          "nfServiceStatus": "REGISTERED",
+          "serviceInstanceId": "24c7b397-0431-48ce-b281-f8c377183ba2",
+          "scheme": "https",
+           "versions": [
+                {
+                    "apiVersionInUri": "v2",
+                    "apiFullVersion": "2.0.3"
+                }
+           ],
+          "ipEndPoints": [
+            {
+              "ipv4Address": "127.0.0.1",
+              "port": 443,
+              "transport": "TCP"
+            }
+          ]
+        }
+ 
+             ],
+             "nfSetIdList": [
+                "nfset3",
+                "nfset4"
+             ],
+             "nfStatus": "REGISTERED",
+             "nfType": "UDSF",
+"udsfInfo": {
+        "groupId": "UDSF-SDL"
+    },
+             "plmnList": [
+                {
+                   "mcc": "100",
+                   "mnc": "99"
+                },
+                {
+                   "mcc": "101",
+                   "mnc": "105"
+                }
+             ],
+             "priority": 60
+             
+          }
+       
+ }
+ 

@@ -1,0 +1,5 @@
+
+{
+    "production" : [{"url": "nrfc-service.default.svc.cluster.local", "port" : 443}] ,
+    "standalone"  : [{"url": "192.168.1.117", "port" : 8444}]
+}

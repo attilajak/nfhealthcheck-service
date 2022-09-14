@@ -1,0 +1,137 @@
+curl http://192.168.1.195:30053/nudsf-dr/v1/Realm01/Storage01/records
+
+curl http://192.168.1.195:30053/nudr-dr/v2/subscription-data/imsi-75748484/authentication-data/authentication-status
+
+
+
+
+
+        handler = logging.StreamHandler()
+        log_format = "%(asctime)s [%(levelname)s] [%(module)s] [%(funcName)s] %(message)s"
+        formatter = OneLineExceptionFormatter(log_format)
+        handler.setFormatter(formatter)
+        Nrfc.log = logging.getLogger()
+        Nrfc.log.setLevel(os.environ.get("LOGLEVEL", "INFO"))
+        Nrfc.log.addHandler(handler)
+
+
+class OneLineExceptionFormatter(logging.Formatter):
+    def formatException(self, exc_info):
+        result = super(OneLineExceptionFormatter, self).formatException(exc_info)
+        return repr(result)
+
+    def format(self, record):
+        result = super(OneLineExceptionFormatter, self).format(record)
+        if record.exc_text:
+            result = result.replace("\n", "")
+        return result
+
+[WARNING] [connectionpool] [urlopen] Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7f146d2fa310>: Failed to establish a new connection: [Errno 111] Connection refused
+
+/api/v1/namespaces/default/pods
+
+curl -v --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" https://kubernetes/
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nfhealthcheck
+automountServiceAccountToken: true
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: build-robot-secret
+  annotations:
+    kubernetes.io/service-account.name: build-robot
+type: kubernetes.io/service-account-token
+
+
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pods-list
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pods-list
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: default
+roleRef:
+  kind: ClusterRole
+  name: pods-list
+  apiGroup: rbac.authorization.k8s.io
+
+from kubernetes import client, config
+
+
+def main():
+    config.load_incluster_config()
+
+    v1 = client.CoreV1Api()
+    print("Listing pods with their IPs:")
+    ret = v1.list_pod_for_all_namespaces(watch=False)
+    for i in ret.items:
+        print("%s\t%s\t%s" %
+              (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
+
+
+if __name__ == '__main__':
+    main()
+
+
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: k8s-api-ext
+  namespace: istio-system 
+spec:
+  hosts:
+    - kubernetes.default.svc.cluster.local
+  addresses:
+    - 172.21.0.1
+  endpoints:
+    - address: 172.21.0.1
+  exportTo:
+    - "*"
+  location: MESH_EXTERNAL
+  resolution: STATIC
+  ports:
+    - number: 443
+      name: https-k8s
+      protocol: HTTPS
+
+
+apiVersion: v1
+data:
+  stubDomains: |
+        {"abc.com" : ["1.2.3.4"], "my.cluster.local" : ["2.3.4.5"]}
+  upstreamNameservers: |
+        ["8.8.8.8", "8.8.4.4"]
+kind: ConfigMap
+
+{
+  key: fs.readFileSync('localhost-privkey.pem'),
+  cert: fs.readFileSync('localhost-cert.pem')
+}
+
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
+
+kubeadm join 192.168.1.195:6443 --token jc0eyl.jbpua9r84prql0ew \
+	--discovery-token-ca-cert-hash sha256:5b0c8d7af2986fe1d261188eb1e4e271bd900fac971ca269cbb31049f438acc3
+
+git@github.com:attilajak/udr-nodejs-service.git
