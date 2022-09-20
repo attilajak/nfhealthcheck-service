@@ -8,6 +8,7 @@ import signal
 import json
 import urllib3
 import logging
+from watchevent import WatchEvent
 
 
 class OneLineExceptionFormatter(logging.Formatter):
@@ -41,8 +42,8 @@ log.setLevel(os.environ.get("LOGLEVEL", "INFO"))
 log.addHandler(handler)
 
 
-#config.load_incluster_config()
-config.load_kube_config()
+config.load_incluster_config()
+#config.load_kube_config()
 
 
 
@@ -211,34 +212,43 @@ async def pods():
             
         for event in w.stream(v1.list_namespaced_pod,namespace="default",label_selector='app in (udr, udsf, nrfc)',watch=False):
             log.info("Event Arrived")
-            log.info("Event: %s %s %s %s %s" % (event['type'], event['object'].kind, event['object'].metadata.name, event['object'].status.phase,event['object'].metadata.labels))
-            if event['object'].metadata.name not in pod_dictionary and  event['object'].metadata.labels["app"] == "nrfc" and event['object'].status.phase == "Running":
-                pod_dictionary[event['object'].metadata.name] = { "app" : event['object'].metadata.labels["app"] }
+            log.info("Event: %s %s %s %s %s" % (watchevent.pod_eventtype, event['object'].kind, watchevent.pod_name, event['object'].status.phase,event['object'].status))
+             
+            watchevent = WatchEvent(event)
+
+
+            if watchevent.pod_name not in pod_dictionary and  watchevent.pod_applabel == "nrfc" and watchevent.isPodReady() == True:
+                pod_dictionary[watchevent.pod_name] = { "app" : watchevent.pod_applabel }
                 log.info("nrfc is running")
                 nrfc_running = 1
-            elif event['object'].metadata.labels["app"] == "nrfc" and event['object'].status.phase != "Running":
+            elif watchevent.pod_applabel == "nrfc" and watchevent.isPodReady() != True:
                 log.info("nrfc is not ready")
-                if event['object'].metadata.name in pod_dictionary:
-                    pod_dictionary.pop(event['object'].metadata.name)
+                if watchevent.pod_name in pod_dictionary:
+                    pod_dictionary.pop(watchevent.pod_name)
                     nrfc_running = 0
+
+
             #check for number of running udr pods
-            if event['object'].metadata.name not in pod_dictionary and event['object'].metadata.labels["app"] == "udr" and event['object'].status.phase == "Running":
-                pod_dictionary[event['object'].metadata.name] = { "app" : event['object'].metadata.labels["app"] }
+            if watchevent.pod_name not in pod_dictionary and watchevent.pod_applabel == "udr" and watchevent.isPodReady() == True:
+                pod_dictionary[watchevent.pod_name] = { "app" : watchevent.pod_applabel }
                 udr_running_count += 1
-            if event['object'].metadata.name not in pod_dictionary and event['object'].metadata.labels["app"] == "udsf" and event['object'].status.phase == "Running":
-                pod_dictionary[event['object'].metadata.name] = { "app" : event['object'].metadata.labels["app"] }
+
+            if watchevent.pod_name not in pod_dictionary and watchevent.pod_applabel == "udsf" and watchevent.isPodReady() == True:
+                pod_dictionary[watchevent.pod_name] = { "app" : watchevent.pod_applabel }
                 udsf_running_count += 1
-            if event['type'] == "DELETED" and event['object'].metadata.labels["app"] == "udr":
-                if event['object'].metadata.name in pod_dictionary:
-                    pod_dictionary.pop(event['object'].metadata.name)
+
+
+            if watchevent.isPodReady() == False and watchevent.pod_applabel == "udr":
+                if watchevent.pod_name in pod_dictionary:
+                    pod_dictionary.pop(watchevent.pod_name)
                 udr_running_count -= 1
-            if event['type'] == "DELETED" and event['object'].metadata.labels["app"] == "udsf":
-                if event['object'].metadata.name in pod_dictionary:
-                    pod_dictionary.pop(event['object'].metadata.name)
+            if watchevent.isPodReady() == False and watchevent.pod_applabel == "udsf":
+                if watchevent.pod_name in pod_dictionary:
+                    pod_dictionary.pop(watchevent.pod_name)
                 udsf_running_count -= 1
-            if event['type'] == "DELETED" and event['object'].metadata.labels["app"] == "nrfc":
-                if event['object'].metadata.name in pod_dictionary:
-                    pod_dictionary.pop(event['object'].metadata.name)
+            if watchevent.isPodReady() == False and watchevent.pod_applabel == "nrfc":
+                if watchevent.pod_name in pod_dictionary:
+                    pod_dictionary.pop(watchevent.pod_name)
                     nrfc_running = 0
 
             log.info("udr_running_count: %s, udsf_running_count: %s" % (udr_running_count,udsf_running_count))
