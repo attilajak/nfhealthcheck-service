@@ -26,6 +26,8 @@ class OneLineExceptionFormatter(logging.Formatter):
 service_mode = "production"
 #service_mode = "standalone"
 
+udr_runner = PodRunner("udr")
+udsf_runner = PodRunner("udsf")
 
 pod_dictionary = {}
 
@@ -103,6 +105,9 @@ async def pods():
 
     nrfc_running = 0
 
+    udr_statuschange = False
+    udsf_statuschange = False
+
     log.info("Enter")
     w = watch.Watch()
 
@@ -112,44 +117,51 @@ async def pods():
         for event in w.stream(v1.list_namespaced_pod,namespace="default",label_selector='app in (udr, udsf, nrfc)',watch=False):
             log.info("Event Arrived")
              
-            watchevent = WatchEvent(event)
+            watchevent = WatchEvent()
+
+            watchevent.process_event(event)
 
             log.info("Event: %s %s %s" % (watchevent.pod_eventtype, watchevent.pod_name, event['object'].status.conditions))
 
 
-            if watchevent.pod_name not in pod_dictionary and  watchevent.pod_applabel == "nrfc" and watchevent.isPodReady() == True:
+            if watchevent.pod_name not in pod_dictionary and  watchevent.pod_applabel == "nrfc" and watchevent.is_pod_ready() == True:
                 pod_dictionary[watchevent.pod_name] = { "app" : watchevent.pod_applabel }
                 log.info("nrfc is running")
                 nrfc_running = 1
-            elif watchevent.pod_applabel == "nrfc" and watchevent.isPodReady() != True:
+            elif watchevent.pod_applabel == "nrfc" and watchevent.is_pod_ready() != True:
                 log.info("nrfc is not ready")
                 if watchevent.pod_name in pod_dictionary:
                     pod_dictionary.pop(watchevent.pod_name)
                     nrfc_running = 0
 
             if watchevent.pod_applabel == "udr":
-                runner,statuschange = PodRunner(watchevent,"udr")
-            elif watchevent.pod_applabel == "udsf":
-                runner,statuschange = PodRunner(watchevent,"udsf")
+                udr_statuschange = udr_runner.process_event(watchevent)
+                log.info("udr_statuschange: " + str(udr_statuschange))
+
+            if watchevent.pod_applabel == "udsf":
+                udsf_statuschange = udsf_runner.process_event(watchevent)
+                log.info("udsf_statuschange: " + str(udsf_statuschange))
 
             
-            if watchevent.isPodReady() == False and watchevent.pod_applabel == "nrfc":
+            if watchevent.is_pod_ready() == False and watchevent.pod_applabel == "nrfc":
                 if watchevent.pod_name in pod_dictionary:
                     pod_dictionary.pop(watchevent.pod_name)
                     nrfc_running = 0
             
-            if watchevent.pod_applabel == "udr" and statuschange:
-                if nrfc_running == 1:
-                    try:
-                        process_servicestatus(runner.GetServiceStatus(),"udr")
-                    except ( RuntimeError) as e:
-                        log.info("process_servicestatus error %s",e)
-            elif watchevent.pod_applabel == "udsf" and statuschange:
-                if nrfc_running == 1:
-                    try:
-                        process_servicestatus(runner.GetServiceStatus(),"udsf")
-                    except ( RuntimeError) as e:
-                        log.info("process_servicestatus error %s",e)
+            if nrfc_running == 1 and udr_statuschange: 
+                try: 
+                    process_servicestatus(udr_runner.get_service_status(),"udr") 
+                    udr_statuschange = False
+                except ( RuntimeError) as e:
+                    udr_statuschange = False
+                    log.info("process_servicestatus error %s",e)
+            if nrfc_running == 1 and udsf_statuschange: 
+                try: 
+                    process_servicestatus(udsf_runner.get_service_status(),"udsf") 
+                    udsf_statuschange = False
+                except ( RuntimeError) as e:
+                    udsf_statuschange = False
+                    log.info("process_servicestatus error %s",e)
             
             await asyncio.sleep(0)
 
