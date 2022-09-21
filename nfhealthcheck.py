@@ -212,9 +212,10 @@ async def pods():
             
         for event in w.stream(v1.list_namespaced_pod,namespace="default",label_selector='app in (udr, udsf, nrfc)',watch=False):
             log.info("Event Arrived")
-            log.info("Event: %s %s %s %s %s" % (watchevent.pod_eventtype, event['object'].kind, watchevent.pod_name, event['object'].status.phase,event['object'].status))
              
             watchevent = WatchEvent(event)
+
+            log.info("Event: %s %s %s" % (watchevent.pod_eventtype, watchevent.pod_name, event['object'].status.conditions))
 
 
             if watchevent.pod_name not in pod_dictionary and  watchevent.pod_applabel == "nrfc" and watchevent.isPodReady() == True:

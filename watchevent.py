@@ -10,25 +10,28 @@ class WatchEvent() :
     pod_applabel = ""
     pod_eventtype = ""
     pod_status = None
+    pod_event = None
 
 
     def __init__(self, event):
         self.ProcessEvent(event)
 
     
-    def ProcessEvent(event):
+    def ProcessEvent(self,event):
 
-        pod_status = event['object'].status
-        pod_eventtype = event['type']
-        pod_name = event['object'].metadata.name
-        pod_applabel = event['object'].metadata.labels["app"]
+        self.pod_eventtype = event['type']
+        self.pod_name = event['object'].metadata.name
+        self.pod_applabel = event['object'].metadata.labels["app"]
+        self.pod_event = event
 
-        for condition in pod_status["conditions"]:
-            if condition["type"] == "Ready" and condition["status"] == "True":
-                pod_status = True
 
 
     def isPodReady(self):
-        return self.pod_status
+        status = self.pod_event['object'].status
+        for condition in status.conditions:
+            if condition.type == "Ready" and condition.status == "True":
+                self.pod_status = True
+                return self.pod_status
+        return False
 
     
